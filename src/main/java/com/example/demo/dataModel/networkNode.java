@@ -5,5 +5,7 @@ public class networkNode {
     String address;
     String bono;
 
+    //Ik ben brecht
+
     //ik ben aan het werken bij stefje
 }
