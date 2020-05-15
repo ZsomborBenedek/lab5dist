@@ -1,8 +1,7 @@
 package com.example.demo.service;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,6 +29,12 @@ public class MulticastListner implements Runnable {
             System.out.println("NodeCount is " +nameService.nodes.size());
             sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
             sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
+            URL connection2 = new URL("http://"+temp.get(1)+":10000/SetNameServer?&ip="+nameService.thisIp);
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    connection2.openStream()));
+            String message = in.readLine();
+            System.out.println(message);
+
         }
         if (msg.contains("remNode")) {
             String haha = msg.replace("remNode ","");
@@ -53,10 +58,6 @@ public class MulticastListner implements Runnable {
         socket.joinGroup(group);
         while (true) {
             System.out.println("Waiting for multicast message...");
-            int i = 0;
-            while(i == 0){
-                System.out.println("omo");
-            }
             DatagramPacket packet = new DatagramPacket(buffer,
                     buffer.length);
             socket.receive(packet);
@@ -81,12 +82,6 @@ public class MulticastListner implements Runnable {
         socket.send(packet);
         socket.close();
     }
-
-
-
-
-
-
 
     @Override
     public void run() {

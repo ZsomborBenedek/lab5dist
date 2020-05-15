@@ -56,7 +56,7 @@ public class NameController {
         return "This command requires a filename";
     }
     @GetMapping("/AddFile ")
-    public String output3 (@RequestParam(value = "name", defaultValue = "omo") String name,@RequestParam(value = "file", defaultValue = "omo") String file) throws IOException {
+    public String output3 (@RequestParam(value = "name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException {
         if (!name.equals("omo") && !file.equals("omo")) {
             if (nameService.addFileToDataBase(name,file)==1)
             return "file "+file+" located at "+name+" was succesfully added to the node map";
