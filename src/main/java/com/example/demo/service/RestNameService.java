@@ -40,8 +40,10 @@ public class RestNameService {
     }
     public void addNodeToMap(String name, String ip) throws IOException {
         System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip "+ip);
+        /*
         BufferedWriter writer = new BufferedWriter(
-                new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
+                //new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
+                new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
         );
         writer.newLine();   //Add new line
         writer.write(name);
@@ -50,6 +52,9 @@ public class RestNameService {
         writer.close();
         readNodeMap();
         generateReplicationBase();
+
+         */
+        System.out.println(name+" "+ip+" "+"Toegevoegd aan nodemap");
     }
     public int requestFile(String filename){
         Integer hash = hashfunction(filename, false);
