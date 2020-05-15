@@ -23,6 +23,7 @@ public class NameController {
     @GetMapping("/AddNode")
     public String output (@RequestParam(value = "name", defaultValue = "omo") String name,@RequestParam(value = "ip", defaultValue = "omo") String ip) throws IOException {
         if (!name.equals("omo") && !ip.equals("omo")) {
+            System.out.println("Ik run nu /AddNode, Variebelen name "+name+" ip "+ip);
             nameService.addNodeToMap(name, ip);
             return "node "+name+" with ip address "+ip+" was succesfully added to the node map";
         }
@@ -32,6 +33,7 @@ public class NameController {
     @GetMapping("/RemoveNode")
     public String output (@RequestParam(value = "ID", defaultValue = "omo") String ID) throws IOException {
         if (!ID.equals("omo")) {
+
             nameService.removeNodeFromMap(Integer.parseInt(ID));
             return "node "+ID+" was succesfully Removed from the node map";
         }
@@ -58,8 +60,10 @@ public class NameController {
     @GetMapping("/AddFile ")
     public String output3 (@RequestParam(value = "name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException {
         if (!name.equals("omo") && !file.equals("omo")) {
-            if (nameService.addFileToDataBase(name,file)==1)
-            return "file "+file+" located at "+name+" was succesfully added to the node map";
+            if (nameService.addFileToDataBase(name,file)==1) {
+                System.out.println("Ik run nu /AddFile, Variebelen name " + name + " file  " + file);
+                return "file " + file + " located at " + name + " was succesfully added to the node map";
+            }
             else
                 return "file "+file+" located at "+name+" was not added to the node map, Unexisting node";
         }

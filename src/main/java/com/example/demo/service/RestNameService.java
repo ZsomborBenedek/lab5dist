@@ -17,8 +17,9 @@ public class RestNameService {
     String thisIp =inetAddress.getHostAddress();
 
     public RestNameService() throws IOException {
-        readNodeMap();
-        generateReplicationBase();
+        System.out.println("Ik run nu RestNameService constructor");
+        //readNodeMap();
+        //generateReplicationBase();
     }
 
     private int hashfunction(String name, boolean node) {
@@ -38,6 +39,7 @@ public class RestNameService {
         return hash;
     }
     public void addNodeToMap(String name, String ip) throws IOException {
+        System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip "+ip);
         BufferedWriter writer = new BufferedWriter(
                 new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
         );
@@ -118,6 +120,7 @@ public class RestNameService {
         System.out.println(replicatioDataBase.toString());
     }
     public int addFileToDataBase(String name, String fileName){
+        System.out.println("Ik run nu addFileToDataBase, Variebelen name "+name+" filename "+fileName);
         int nameHash = hashfunction(name,true);
         int fileHash = hashfunction(fileName,false);
         if(nodes.get(nameHash)!=null) {

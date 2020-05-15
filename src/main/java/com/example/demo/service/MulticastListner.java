@@ -14,6 +14,7 @@ public class MulticastListner implements Runnable {
     }
 
     private ArrayList<String> getNameAndIp(String msg) throws IOException {
+        System.out.println("Ik run nu /getNameAndIP");
         ArrayList<String> temp = new ArrayList<>();
         if (msg.contains("newNode")) {
             String haha = msg.replace("newNode ","");
@@ -63,6 +64,7 @@ public class MulticastListner implements Runnable {
             socket.receive(packet);
             String msg = new String(packet.getData(),
                     packet.getOffset(), packet.getLength());
+            System.out.println("Deze multicat krijgk binne: "+msg);
                 getNameAndIp(msg);
             if ("OK".equals(msg)) {
                 System.out.println("No more message. Exiting : " + msg);
