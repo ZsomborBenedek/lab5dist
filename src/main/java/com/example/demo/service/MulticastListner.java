@@ -13,7 +13,7 @@ public class MulticastListner implements Runnable {
         nameService = temp;
     }
 
-    private ArrayList<String> getNameAndIp(String msg) throws IOException {
+    private ArrayList<String> getNameAndIp(String msg) throws IOException, InterruptedException {
         System.out.println("Ik run nu /getNameAndIP");
         ArrayList<String> temp = new ArrayList<>();
         if (msg.contains("newNode")) {
@@ -30,8 +30,8 @@ public class MulticastListner implements Runnable {
             System.out.println("NodeCount is " +nameService.nodes.size());
             sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
             sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
-            //URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
-            URL connection2 = new URL(temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
+            Thread.sleep(500);
+            URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     connection2. openStream()));
             String message = in.readLine();
@@ -53,7 +53,7 @@ public class MulticastListner implements Runnable {
         return temp;
     }
     public void receiveUDPMessage(int port) throws
-            IOException {
+            IOException, InterruptedException {
         byte[] buffer = new byte[1024];
         MulticastSocket socket = new MulticastSocket(port);
         InetAddress group = InetAddress.getByName("230.0.0.0");
@@ -91,7 +91,7 @@ public class MulticastListner implements Runnable {
         try {
             receiveUDPMessage( 10000);
             //receiveUDPMessage(eigenIP, 4321);
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
         }
     }
