@@ -9,7 +9,7 @@ public class RestNameService {
     //
     HashMap<Integer, Integer> replicatioDataBase = new HashMap<>();
     // Key is filenameHash, value is nodeName hash
-    HashMap<Integer, Integer> dataBase = new HashMap<>();
+    public HashMap<Integer, Integer> dataBase = new HashMap<>();
     public HashMap<Integer, String> nodes = new HashMap<>();
     Integer highest = 0;
     InetAddress inetAddress = InetAddress.getLocalHost();
@@ -55,6 +55,7 @@ public class RestNameService {
 
          */
         System.out.println(name+" "+ip+" "+"Toegevoegd aan nodemap");
+        nodes.put(hashfunction(name,true),ip);
     }
     public int requestFile(String filename){
         Integer hash = hashfunction(filename, false);

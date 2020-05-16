@@ -57,8 +57,8 @@ public class NameController {
         }
         return "This command requires a filename";
     }
-    @GetMapping("/AddFile ")
-    public String output3 (@RequestParam(value = "name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException {
+    @GetMapping("/AddFile")
+    public String output3 (@RequestParam(value = "Name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException {
         if (!name.equals("omo") && !file.equals("omo")) {
             if (nameService.addFileToDataBase(name,file)==1) {
                 System.out.println("Ik run nu /AddFile, Variebelen name " + name + " file  " + file);
@@ -69,5 +69,9 @@ public class NameController {
         }
         else
             return"removing node failed";
+    }
+    @GetMapping("/Database")
+    public String database(){
+        return nameService.dataBase.toString();
     }
 }

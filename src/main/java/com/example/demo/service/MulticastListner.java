@@ -30,12 +30,9 @@ public class MulticastListner implements Runnable {
             System.out.println("NodeCount is " +nameService.nodes.size());
             sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
             sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
-            Thread.sleep(500);
+            Thread.sleep(100);
             URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    connection2. openStream()));
-            String message = in.readLine();
-            System.out.println(message);
+            connection2.openConnection().getInputStream();
 
         }
         if (msg.contains("remNode")) {
@@ -66,6 +63,7 @@ public class MulticastListner implements Runnable {
             String msg = new String(packet.getData(),
                     packet.getOffset(), packet.getLength());
             System.out.println("Deze multicat krijgk binne: "+msg);
+            if(msg.contains("newNode"))
                 getNameAndIp(msg);
             if ("OK".equals(msg)) {
                 System.out.println("No more message. Exiting : " + msg);
