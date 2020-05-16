@@ -30,7 +30,7 @@ public class MulticastListner implements Runnable {
             System.out.println("NodeCount is " +nameService.nodes.size());
             sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
             sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
-            Thread.sleep(100);
+            Thread.sleep(500);
             URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
             connection2.openConnection().getInputStream();
 
