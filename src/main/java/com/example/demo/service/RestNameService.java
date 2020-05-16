@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class RestNameService {
     //
-    HashMap<Integer, Integer> replicatioDataBase = new HashMap<>();
+    HashMap<Integer, Integer> replicationDatabase = new HashMap<>();
     // Key is filenameHash, value is nodeName hash
     public HashMap<Integer, Integer> dataBase = new HashMap<>();
     public HashMap<Integer, String> nodes = new HashMap<>();
@@ -18,6 +18,7 @@ public class RestNameService {
 
     public RestNameService() throws IOException {
         System.out.println("Ik run nu RestNameService constructor");
+        clearDataBase();
         //readNodeMap();
         //generateReplicationBase();
     }
@@ -59,8 +60,8 @@ public class RestNameService {
     }
     public int requestFile(String filename){
         Integer hash = hashfunction(filename, false);
-        if(replicatioDataBase.get(hash)!=null)
-            return replicatioDataBase.get(hash);
+        if(replicationDatabase.get(hash)!=null)
+            return replicationDatabase.get(hash);
         else
             return -1;
     }
@@ -101,20 +102,43 @@ public class RestNameService {
     }
     //Dees ga read replicationBase moete worre
     public void generateReplicationBase() throws IOException {
-        File file2 = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//Database2.txt");
+        File file2 = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
         String st2;
-        replicatioDataBase.clear();
+        //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null){
-            Integer tempfile = hashfunction(st2,false);
+            String[] temporary = st2.split("::");
+            String fileName = temporary[0];
+            String nodeName = temporary[1];
+            Integer tempfile = hashfunction(fileName,false);
             Integer temp = tempfile-1;
-            while (nodes.get(temp)==null && temp != 0){
+            while ((nodes.get(temp)==null||nodes.get(temp).equals(hashfunction(nodeName,true))) && temp != 0){
                 temp--;
             }
-            if (temp == 0)
-                replicatioDataBase.put(tempfile,highest);
-            else
-                replicatioDataBase.put(tempfile,temp);
+            //EERST LISTNER DAN RECEIVER
+            if (temp == 0) {
+                if(replicationDatabase.get(tempfile)==null) {
+                    //Hier in database knalle da er een verandering is
+                    System.out.println("nieuwe file, temp = 0");
+                    replicationDatabase.put(tempfile, highest);
+                }
+                else
+                    System.out.println("ouwe file niks toegevoegd temp=0");
+            }
+            else {
+                if(replicationDatabase.get(tempfile)==null) {
+                    //Hier in database knalle da er een verandering is
+                    System.out.println("nieuwe file, temp is nie 0");
+                    replicationDatabase.put(tempfile, temp);
+                }
+                else if (temp<replicationDatabase.get(tempfile)){
+                    //Er is een nieuwe betere gevonden
+                    //Laat de nodus dus weten dat ze door moeten sturen
+                    replicationDatabase.replace(tempfile,replicationDatabase.get(tempfile),temp);
+                }
+                else
+                    System.out.println("ouwe file niks toegevoegd, temp is nie 0");
+            }
 
             /*
             DEZE CODE AANGEPAST NAAR BOVENSTAANDE CODE, KDENK DA DIE FOUT WAS
@@ -123,18 +147,38 @@ public class RestNameService {
             replicatioDataBase.put(tempfile,highest);
              */
         }
-        System.out.println(replicatioDataBase.toString());
+        System.out.println(replicationDatabase.toString());
     }
-    public int addFileToDataBase(String name, String fileName){
+    public int addFileToDataBase(String name, String fileName) throws IOException {
         System.out.println("Ik run nu addFileToDataBase, Variebelen name "+name+" filename "+fileName);
         int nameHash = hashfunction(name,true);
         int fileHash = hashfunction(fileName,false);
         if(nodes.get(nameHash)!=null) {
-            dataBase.put(fileHash, nameHash);
-            return 1;
+            if (dataBase.get(fileHash) == null) {
+                dataBase.put(fileHash, nameHash);
+
+                BufferedWriter writer = new BufferedWriter(
+                        new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//DataBase.txt", true)  //Set true for append mode
+                        //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
+                );
+                writer.newLine();   //Add new line
+                writer.write(fileName + "::" + name);
+                writer.close();
+                generateReplicationBase();
+                return 1;
+            }
+            return -1;
         }
         else
             return -1;
+    }
+    private void clearDataBase() throws IOException {
+        File database = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//DataBase.txt");
+        if (database.exists() && database.isFile())
+        {
+            database.delete();
+        }
+        database.createNewFile();
     }
     public void readNodeMap() throws IOException {
         File file = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic///NodeMap.txt");
