@@ -133,54 +133,63 @@ public class RestNameService {
                 //EERST LISTNER DAN RECEIVE
                 if (temp == 0) {
                     if (replicationDatabase.get(tempfile) == null) {
-                        //Hier in database knalle da er een verandering is
                         if (!highest.equals(hashfunction(nodeName, true))) {
-                            System.out.println("nieuwe file, temp = 0");
                             replicationDatabase.put(tempfile, highest);
-                        }
+                            URL connection = new URL("http://" + nodes.get(dataBase.get(fileName)) + ":9000/HostLocalFile?name=" + fileName);
+                            connection.openConnection().getInputStream();
+                            URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(dataBase.get(fileName)));
+                            connection2.openConnection().getInputStream();
+                            //HIER DUS NAAR HIGHEST REPLICATEN
+                        }/*
                         else{
                             int i = highest-1;
                             while (nodes.get((i))==null){
                                 i--;
                             }
                             replicationDatabase.put(tempfile,i);
-                        }
+                            //Hier naar i knallen
+                        }*/
                     } else if (replicationDatabase.get(tempfile)<hashfunction(nodeName,true)){
+                        URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
+                        connection.openConnection().getInputStream();
+                        URL connection2 = new URL("http://" + nodes.get(hashfunction(nodeName,true)) + ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(replicationDatabase.get(tempfile)));
+                        connection2.openConnection().getInputStream();
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                     }
-                    else
-                        System.out.println("ouwe file niks toegevoegd temp=0");
                 } else {
                     if (replicationDatabase.get(tempfile) == null) {
-                        //Hier in database knalle da er een verandering is
                         if (!temp.equals(hashfunction(nodeName, true))){
-                            System.out.println("nieuwe file, temp is nie 0");
                         replicationDatabase.put(tempfile, temp);
-                    }else{
+                            URL connection = new URL("http://" + nodes.get(dataBase.get(fileName)) + ":9000/HostLocalFile?name=" + fileName);
+                            connection.openConnection().getInputStream();
+                            URL connection2 = new URL("http://" + nodes.get(temp) + ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(dataBase.get(fileName)));
+                            connection2.openConnection().getInputStream();
+                        //Knallen naar temp
+                    }/*else{
                             int i = temp-1;
                             while (nodes.get((i))==null){
                                 i--;
                             }
                             if(i !=0)
                             replicationDatabase.put(tempfile,i);
+                            //Knallen naar i
                             else
                                 replicationDatabase.put(tempfile,highest);
+                            //Knallen naar highest
 
-                        }
+                        }*/
                     } else if (temp > replicationDatabase.get(tempfile)) {
-                        //Er is een nieuwe betere gevonden
-                        //Laat de nodus dus weten dat ze door moeten sturen
+
+                        URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
+                        connection.openConnection().getInputStream();
+                        URL connection2 = new URL("http://" + nodes.get(temp)+ ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(replicationDatabase.get(tempfile)));
+                        connection2.openConnection().getInputStream();
+                        replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                         replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
                     } else
                         System.out.println("ouwe file niks toegevoegd, temp is nie 0");
                 }
 
-            /*
-            DEZE CODE AANGEPAST NAAR BOVENSTAANDE CODE, KDENK DA DIE FOUT WAS
-            if (temp == 0)
-                replicatioDataBase.put(tempfile,highest);
-            replicatioDataBase.put(tempfile,highest);
-             */
             }
             else
                 System.out.println("nog geen replication want der is maar één node");
