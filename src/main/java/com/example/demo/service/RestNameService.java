@@ -75,7 +75,7 @@ public class RestNameService {
         else
             return -1;
     }
-    public void removeNodeFromMap(Integer node) throws IOException {
+    public void removeNodeFromMap(Integer node) throws IOException, InterruptedException {
         nodes.clear();
         File file = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -112,12 +112,13 @@ public class RestNameService {
         generateReplicationBase();
     }
     //Dees ga read replicationBase moete worre
-    public void generateReplicationBase() throws IOException {
+    public void generateReplicationBase() throws IOException, InterruptedException {
         File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
         String st2;
         //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null) {
+            Thread.sleep(100);
             System.out.println("Dees is st2 " + st2);
             String[] temporary = st2.split("::");
            // System.out.println("Dees is den array tostring" + Arrays.toString(temporary));
@@ -205,7 +206,7 @@ public class RestNameService {
             System.out.println(replicationDatabase.toString());
         }
     }
-    public int addFileToDataBase(String name, String fileName) throws IOException {
+    public int addFileToDataBase(String name, String fileName) throws IOException, InterruptedException {
         System.out.println("Ik run nu addFileToDataBase, Variebelen name "+name+" filename "+fileName);
         int nameHash = hashfunction(name,true);
         int fileHash = hashfunction(fileName,false);

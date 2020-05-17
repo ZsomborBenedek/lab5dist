@@ -31,7 +31,7 @@ public class NameController {
             return"adding new node failed";
     }
     @GetMapping("/RemoveNode")
-    public String output (@RequestParam(value = "ID", defaultValue = "omo") String ID) throws IOException {
+    public String output (@RequestParam(value = "ID", defaultValue = "omo") String ID) throws IOException, InterruptedException {
         if (!ID.equals("omo")) {
 
             nameService.removeNodeFromMap(Integer.parseInt(ID));
@@ -41,7 +41,7 @@ public class NameController {
             return"removing node failed";
     }
     @GetMapping("/LocateFile")
-    public String output2 (@RequestParam(value = "fileName", defaultValue = "omo")String fileName,@RequestParam(value = "remove", defaultValue = "false") String remove) throws IOException {
+    public String output2 (@RequestParam(value = "fileName", defaultValue = "omo")String fileName,@RequestParam(value = "remove", defaultValue = "false") String remove) throws IOException, InterruptedException {
         if (!fileName.equals("omo")){
             if (nameService.requestFile(fileName) == -1)
                 return "File Not present in any of the nodes";
@@ -58,7 +58,7 @@ public class NameController {
         return "This command requires a filename";
     }
     @GetMapping("/AddFile")
-    public String output3 (@RequestParam(value = "Name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException {
+    public String output3 (@RequestParam(value = "Name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException, InterruptedException {
         if (!name.equals("omo") && !file.equals("omo")) {
             if (nameService.addFileToDataBase(name,file)==1) {
                 //System.out.println("Ik run nu /AddFile, Variebelen name " + name + " file  " + file);
