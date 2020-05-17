@@ -25,7 +25,7 @@ public class RestNameService {
         //generateReplicationBase();
     }
 
-    private int hashfunction(String name, boolean node) {
+    public int hashfunction(String name, boolean node) {
         int hash=0;
         int temp = 0;
         int i;

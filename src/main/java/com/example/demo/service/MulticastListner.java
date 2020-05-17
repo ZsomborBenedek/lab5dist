@@ -28,6 +28,14 @@ public class MulticastListner implements Runnable {
            // System.out.println(temp.toString());
 
 //            sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
+            if (nameService.hashfunction(temp.get(0),true) > nameService.highest) {
+                nameService.highest = nameService.hashfunction(temp.get(0), true);
+                //System.out.println(name+" is nu de hoogst gehashte node");
+            }
+            if (nameService.hashfunction(temp.get(0),true) < nameService.lowest) {
+                nameService.lowest = nameService.hashfunction(temp.get(0), true);
+                // System.out.println(name+" is nu de laagst gehashte node");
+            }
             Thread.sleep(500);
             URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
             connection2.openConnection().getInputStream();
