@@ -154,7 +154,7 @@ public class RestNameService {
                         //Hier in database knalle da er een verandering is
                         System.out.println("nieuwe file, temp is nie 0");
                         replicationDatabase.put(tempfile, temp);
-                    } else if (temp < replicationDatabase.get(tempfile)) {
+                    } else if (temp > replicationDatabase.get(tempfile)) {
                         //Er is een nieuwe betere gevonden
                         //Laat de nodus dus weten dat ze door moeten sturen
                         replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
