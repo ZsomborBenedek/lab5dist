@@ -135,12 +135,12 @@ public class RestNameService {
                     if (replicationDatabase.get(tempfile) == null) {
                         if (!highest.equals(hashfunction(nodeName, true))) {
                             replicationDatabase.put(tempfile, highest);
-                            System.out.println("ik surf nu naar http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?name=" + fileName);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
                             System.out.println(nodes.get(highest));
                             URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
+                            System.out.println("Transfer klaar bby");
                             //HIER DUS NAAR HIGHEST REPLICATEN
                         }/*
                         else{
@@ -156,6 +156,7 @@ public class RestNameService {
                         connection.openConnection().getInputStream();
                         URL connection2 = new URL("http://" + nodes.get(hashfunction(nodeName,true)) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
                         connection2.openConnection().getInputStream();
+                        System.out.println("Transfer klaar bby");
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                     }
                 } else {
@@ -166,6 +167,7 @@ public class RestNameService {
                             connection.openConnection().getInputStream();
                             URL connection2 = new URL("http://" + nodes.get(temp) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
+                            System.out.println("Transfer klaar bby");
                         //Knallen naar temp
                     }/*else{
                             int i = temp-1;
@@ -186,6 +188,7 @@ public class RestNameService {
                         connection.openConnection().getInputStream();
                         URL connection2 = new URL("http://" + nodes.get(temp)+ ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
                         connection2.openConnection().getInputStream();
+                        System.out.println("Transfer klaar bby");
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                         replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
                     } else
