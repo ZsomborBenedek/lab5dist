@@ -43,8 +43,8 @@ public class RestNameService {
         System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip "+ip);
         /*
         BufferedWriter writer = new BufferedWriter(
-                //new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
-                new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
+                new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
+                //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
         );
         writer.newLine();   //Add new line
         writer.write(name);
@@ -55,8 +55,13 @@ public class RestNameService {
         generateReplicationBase();
 
          */
+
         System.out.println(name+" "+ip+" "+"Toegevoegd aan nodemap");
         nodes.put(hashfunction(name,true),ip);
+        if (hashfunction(name,true) > highest) {
+            highest = hashfunction(name, true);
+            System.out.println(name+" is nu de hoogst gehashte node");
+        }
     }
     public int requestFile(String filename){
         Integer hash = hashfunction(filename, false);
@@ -119,8 +124,10 @@ public class RestNameService {
             if (temp == 0) {
                 if(replicationDatabase.get(tempfile)==null) {
                     //Hier in database knalle da er een verandering is
-                    System.out.println("nieuwe file, temp = 0");
-                    replicationDatabase.put(tempfile, highest);
+                    if(!highest.equals(hashfunction(nodeName,true))) {
+                        System.out.println("nieuwe file, temp = 0");
+                        replicationDatabase.put(tempfile, highest);
+                    }
                 }
                 else
                     System.out.println("ouwe file niks toegevoegd temp=0");
