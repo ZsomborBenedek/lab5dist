@@ -180,7 +180,7 @@ public class RestNameService {
             return -1;
     }
     private void clearDataBase() throws IOException {
-        File database = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//DataBase.txt");
+        File database = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         if (database.exists() && database.isFile())
         {
             database.delete();
