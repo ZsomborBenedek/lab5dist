@@ -129,6 +129,7 @@ public class RestNameService {
                 while ((nodes.get(temp) == null || nodes.get(temp).equals(hashfunction(nodeName, true))) && temp != 0) {
                     temp--;
                 }
+                System.out.println("Temp is hier "+temp);
                 //EERST LISTNER DAN RECEIVE
                 if (temp == 0) {
                     if (replicationDatabase.get(tempfile) == null) {
