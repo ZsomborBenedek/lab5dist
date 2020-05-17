@@ -107,7 +107,7 @@ public class RestNameService {
     }
     //Dees ga read replicationBase moete worre
     public void generateReplicationBase() throws IOException {
-        File file2 = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//DataBase.txt");
+        File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
         String st2;
         //replicatioDataBase.clear();
