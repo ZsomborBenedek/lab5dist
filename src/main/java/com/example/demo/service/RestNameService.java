@@ -118,7 +118,7 @@ public class RestNameService {
         String st2;
         //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null) {
-            Thread.sleep(100);
+            //Thread.sleep(100);
             System.out.println("Dees is st2 " + st2);
             String[] temporary = st2.split("::");
            // System.out.println("Dees is den array tostring" + Arrays.toString(temporary));
