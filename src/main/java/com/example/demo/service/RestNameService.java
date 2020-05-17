@@ -147,7 +147,7 @@ public class RestNameService {
                         }/*
                         else{
                             int i = highest-1;
-                            while (nodes.get((i))==null){
+                            while (nodes.get((i))==nuzll){
                                 i--;
                             }
                             replicationDatabase.put(tempfile,i);
