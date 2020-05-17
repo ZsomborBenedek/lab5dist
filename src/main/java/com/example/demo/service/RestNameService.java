@@ -124,10 +124,12 @@ public class RestNameService {
             String fileName = temporary[0];
             String nodeName = temporary[1];
             Integer tempfile = hashfunction(fileName, false);
+            System.out.println(tempfile);
             Integer temp = tempfile - 1;
             if (nodes.size() > 1) {
-                while ((nodes.get(temp) == null || nodes.get(temp).equals(hashfunction(nodeName, true))) && temp != 0) {
+                while ((nodes.get(temp) == null || nodes.get(temp).equals(hashfunction(nodeName, true))) && temp > 0) {
                     temp--;
+
                     System.out.println(temp);
                 }
                 System.out.println("Temp is hier "+temp);
