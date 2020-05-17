@@ -153,8 +153,20 @@ public class RestNameService {
                 } else {
                     if (replicationDatabase.get(tempfile) == null) {
                         //Hier in database knalle da er een verandering is
-                        System.out.println("nieuwe file, temp is nie 0");
+                        if (!temp.equals(hashfunction(nodeName, true))){
+                            System.out.println("nieuwe file, temp is nie 0");
                         replicationDatabase.put(tempfile, temp);
+                    }else{
+                            int i = temp-1;
+                            while (nodes.get((i))==null){
+                                i--;
+                            }
+                            if(i !=0)
+                            replicationDatabase.put(tempfile,i);
+                            else
+                                replicationDatabase.put(tempfile,highest);
+
+                        }
                     } else if (temp > replicationDatabase.get(tempfile)) {
                         //Er is een nieuwe betere gevonden
                         //Laat de nodus dus weten dat ze door moeten sturen
