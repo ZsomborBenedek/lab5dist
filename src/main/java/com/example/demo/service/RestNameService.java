@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class RestNameService {
@@ -113,6 +114,7 @@ public class RestNameService {
         //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null){
             String[] temporary = st2.split("::");
+            System.out.println(Arrays.toString(temporary));
             String fileName = temporary[0];
             String nodeName = temporary[1];
             Integer tempfile = hashfunction(fileName,false);
