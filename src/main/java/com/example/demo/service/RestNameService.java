@@ -34,7 +34,6 @@ public class RestNameService {
         }
         hash = hash+temp;
         if (node) {
-            System.out.println("node");
         }
         else
             hash = hash/53;
