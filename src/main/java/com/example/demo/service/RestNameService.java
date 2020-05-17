@@ -136,6 +136,7 @@ public class RestNameService {
                         if (!highest.equals(hashfunction(nodeName, true))) {
                             replicationDatabase.put(tempfile, highest);
                             System.out.println("ik surf nu naar http://" + nodes.get(dataBase.get(fileName)) + ":9000/HostLocalFile?name=" + fileName);
+                            System.out.println(dataBase.get(fileName));
                             URL connection = new URL("http://" + nodes.get(dataBase.get(fileName)) + ":9000/HostLocalFile?name=" + fileName);
                             connection.openConnection().getInputStream();
                             URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(dataBase.get(fileName)));
