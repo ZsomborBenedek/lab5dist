@@ -112,7 +112,7 @@ public class RestNameService {
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
         String st2;
         //replicatioDataBase.clear();
-        while ((st2 = br2.readLine()) != null){
+        while ((st2 = br2.readLine()) != null && !br2.readLine().isEmpty()){
             System.out.println("Dees is st2 "+st2);
             String[] temporary = st2.split("::");
             System.out.println("Dees is den array tostring"+Arrays.toString(temporary));
