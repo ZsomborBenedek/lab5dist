@@ -13,6 +13,7 @@ public class RestNameService {
     public HashMap<Integer, Integer> dataBase = new HashMap<>();
     public HashMap<Integer, String> nodes = new HashMap<>();
     Integer highest = 0;
+    Integer lowest = 10000000;
     InetAddress inetAddress = InetAddress.getLocalHost();
     String name = inetAddress.getHostName();
     String thisIp =inetAddress.getHostAddress();
@@ -61,6 +62,10 @@ public class RestNameService {
         if (hashfunction(name,true) > highest) {
             highest = hashfunction(name, true);
             System.out.println(name+" is nu de hoogst gehashte node");
+        }
+        if (hashfunction(name,true) < lowest) {
+            lowest = hashfunction(name, true);
+            System.out.println(name+" is nu de laagst gehashte node");
         }
     }
     public int requestFile(String filename){
