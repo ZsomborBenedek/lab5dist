@@ -165,7 +165,7 @@ public class RestNameService {
                 dataBase.put(fileHash, nameHash);
 
                 BufferedWriter writer = new BufferedWriter(
-                        new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//DataBase.txt", true)  //Set true for append mode
+                        new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true)  //Set true for append mode
                         //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
                 );
                 writer.newLine();   //Add new line
