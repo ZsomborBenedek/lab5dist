@@ -110,7 +110,7 @@ public class RestNameService {
     public void generateReplicationBase() throws IOException {
         File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
-        String st2 = "kakapipi";
+        String st2;
         //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null){
             System.out.println("Dees is st2 "+st2);
@@ -171,8 +171,8 @@ public class RestNameService {
                         new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true)  //Set true for append mode
                         //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
                 );
-                writer.newLine();   //Add new line
                 writer.write(fileName + "::" + name);
+                writer.newLine();   //Add new line
                 writer.close();
                 generateReplicationBase();
                 return 1;
