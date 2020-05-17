@@ -110,9 +110,9 @@ public class RestNameService {
     public void generateReplicationBase() throws IOException {
         File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
-        String st2;
+        String st2 = "kakapipi";
         //replicatioDataBase.clear();
-        while ((st2 = br2.readLine()) != null && !br2.readLine().isEmpty()){
+        while ((st2 = br2.readLine()) != null){
             System.out.println("Dees is st2 "+st2);
             String[] temporary = st2.split("::");
             System.out.println("Dees is den array tostring"+Arrays.toString(temporary));
