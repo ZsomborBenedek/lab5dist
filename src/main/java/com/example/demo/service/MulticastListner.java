@@ -26,15 +26,13 @@ public class MulticastListner implements Runnable {
             //addNodeToMap(temp.get(0),temp.get(1));
             //nodes.put(hashfunction(temp.get(0),true),temp.get(1));
             System.out.println(temp.toString());
-            System.out.println("Node added");
-            System.out.println("NodeCount is " +nameService.nodes.size());
-            sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
-            sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
 
+//            sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
             Thread.sleep(500);
             URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
             connection2.openConnection().getInputStream();
 
+            sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
         }
         if (msg.contains("remNode")) {
             String haha = msg.replace("remNode ","");

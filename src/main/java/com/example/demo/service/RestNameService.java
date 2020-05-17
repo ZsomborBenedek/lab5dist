@@ -112,43 +112,40 @@ public class RestNameService {
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
         String st2;
         //replicatioDataBase.clear();
-        while ((st2 = br2.readLine()) != null){
-            System.out.println("Dees is st2 "+st2);
+        while ((st2 = br2.readLine()) != null) {
+            System.out.println("Dees is st2 " + st2);
             String[] temporary = st2.split("::");
-            System.out.println("Dees is den array tostring"+Arrays.toString(temporary));
+            System.out.println("Dees is den array tostring" + Arrays.toString(temporary));
             String fileName = temporary[0];
             String nodeName = temporary[1];
-            Integer tempfile = hashfunction(fileName,false);
-            Integer temp = tempfile-1;
-            while ((nodes.get(temp)==null||nodes.get(temp).equals(hashfunction(nodeName,true))) && temp != 0){
-                temp--;
-            }
-            //EERST LISTNER DAN RECEIVE
-            if (temp == 0) {
-                if(replicationDatabase.get(tempfile)==null) {
-                    //Hier in database knalle da er een verandering is
-                    if(!highest.equals(hashfunction(nodeName,true))) {
-                        System.out.println("nieuwe file, temp = 0");
-                        replicationDatabase.put(tempfile, highest);
-                    }
+            Integer tempfile = hashfunction(fileName, false);
+            Integer temp = tempfile - 1;
+            if (nodes.size() > 1) {
+                while ((nodes.get(temp) == null || nodes.get(temp).equals(hashfunction(nodeName, true))) && temp != 0) {
+                    temp--;
                 }
-                else
-                    System.out.println("ouwe file niks toegevoegd temp=0");
-            }
-            else {
-                if(replicationDatabase.get(tempfile)==null) {
-                    //Hier in database knalle da er een verandering is
-                    System.out.println("nieuwe file, temp is nie 0");
-                    replicationDatabase.put(tempfile, temp);
+                //EERST LISTNER DAN RECEIVE
+                if (temp == 0) {
+                    if (replicationDatabase.get(tempfile) == null) {
+                        //Hier in database knalle da er een verandering is
+                        if (!highest.equals(hashfunction(nodeName, true))) {
+                            System.out.println("nieuwe file, temp = 0");
+                            replicationDatabase.put(tempfile, highest);
+                        }
+                    } else
+                        System.out.println("ouwe file niks toegevoegd temp=0");
+                } else {
+                    if (replicationDatabase.get(tempfile) == null) {
+                        //Hier in database knalle da er een verandering is
+                        System.out.println("nieuwe file, temp is nie 0");
+                        replicationDatabase.put(tempfile, temp);
+                    } else if (temp < replicationDatabase.get(tempfile)) {
+                        //Er is een nieuwe betere gevonden
+                        //Laat de nodus dus weten dat ze door moeten sturen
+                        replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
+                    } else
+                        System.out.println("ouwe file niks toegevoegd, temp is nie 0");
                 }
-                else if (temp<replicationDatabase.get(tempfile)){
-                    //Er is een nieuwe betere gevonden
-                    //Laat de nodus dus weten dat ze door moeten sturen
-                    replicationDatabase.replace(tempfile,replicationDatabase.get(tempfile),temp);
-                }
-                else
-                    System.out.println("ouwe file niks toegevoegd, temp is nie 0");
-            }
 
             /*
             DEZE CODE AANGEPAST NAAR BOVENSTAANDE CODE, KDENK DA DIE FOUT WAS
@@ -156,8 +153,11 @@ public class RestNameService {
                 replicatioDataBase.put(tempfile,highest);
             replicatioDataBase.put(tempfile,highest);
              */
+            }
+            else
+                System.out.println("nog geen replication want der is maar één node");
+            System.out.println(replicationDatabase.toString());
         }
-        System.out.println(replicationDatabase.toString());
     }
     public int addFileToDataBase(String name, String fileName) throws IOException {
         System.out.println("Ik run nu addFileToDataBase, Variebelen name "+name+" filename "+fileName);
