@@ -139,7 +139,7 @@ public class RestNameService {
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
                             System.out.println(nodes.get(highest));
-                            URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(fileName)));
+                            URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
                             //HIER DUS NAAR HIGHEST REPLICATEN
                         }/*
