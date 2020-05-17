@@ -166,7 +166,7 @@ public class RestNameService {
         if(nodes.get(nameHash)!=null) {
             if (dataBase.get(fileHash) == null) {
                 dataBase.put(fileHash, nameHash);
-
+                System.out.println("na komt de schrijver van database");
                 BufferedWriter writer = new BufferedWriter(
                         new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true)  //Set true for append mode
                         //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
