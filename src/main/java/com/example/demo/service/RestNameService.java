@@ -137,7 +137,7 @@ public class RestNameService {
                             replicationDatabase.put(tempfile, highest);
                             System.out.println("ik surf nu naar http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?name=" + fileName);
                             System.out.println(dataBase.get(fileName));
-                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?name=" + fileName);
+                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
                             URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(dataBase.get(fileName)));
                             connection2.openConnection().getInputStream();
@@ -162,7 +162,7 @@ public class RestNameService {
                     if (replicationDatabase.get(tempfile) == null) {
                         if (!temp.equals(hashfunction(nodeName, true))){
                         replicationDatabase.put(tempfile, temp);
-                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?name=" + fileName);
+                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
                             URL connection2 = new URL("http://" + nodes.get(temp) + ":9000/GetReplicationFile?name=" + fileName+"&ip="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
