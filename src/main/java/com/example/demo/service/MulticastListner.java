@@ -14,7 +14,7 @@ public class MulticastListner implements Runnable {
     }
 
     private ArrayList<String> getNameAndIp(String msg) throws IOException, InterruptedException {
-        System.out.println("Ik run nu /getNameAndIP");
+        //System.out.println("Ik run nu /getNameAndIP");
         ArrayList<String> temp = new ArrayList<>();
         if (msg.contains("newNode")) {
             String haha = msg.replace("newNode ","");
@@ -25,7 +25,7 @@ public class MulticastListner implements Runnable {
             }
             //addNodeToMap(temp.get(0),temp.get(1));
             //nodes.put(hashfunction(temp.get(0),true),temp.get(1));
-            System.out.println(temp.toString());
+           // System.out.println(temp.toString());
 
 //            sendUDPMessage("NameServer "+nameService.name+"::"+nameService.thisIp,temp.get(1),10000);
             Thread.sleep(500);
@@ -43,8 +43,8 @@ public class MulticastListner implements Runnable {
             }
             // Hier wordt terug gegeve de hoeveelste node hij was dus ist mogenlijk de hash te fixe
             //removeNodeFromMap(hashfunction(temp.get(0),true));
-            System.out.println(temp.toString());
-            System.out.println("Node removed");
+            //System.out.println(temp.toString());
+            //System.out.println("Node removed");
         }
         return temp;
     }
@@ -55,17 +55,17 @@ public class MulticastListner implements Runnable {
         InetAddress group = InetAddress.getByName("230.0.0.0");
         socket.joinGroup(group);
         while (true) {
-            System.out.println("Waiting for multicast message...");
+            //System.out.println("Waiting for multicast message...");
             DatagramPacket packet = new DatagramPacket(buffer,
                     buffer.length);
             socket.receive(packet);
             String msg = new String(packet.getData(),
                     packet.getOffset(), packet.getLength());
-            System.out.println("Deze multicat krijgk binne: "+msg);
+           // System.out.println("Deze multicat krijgk binne: "+msg);
             if(msg.contains("newNode"))
                 getNameAndIp(msg);
             if ("OK".equals(msg)) {
-                System.out.println("No more message. Exiting : " + msg);
+             //   System.out.println("No more message. Exiting : " + msg);
                 break;
             }
         }

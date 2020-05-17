@@ -19,7 +19,7 @@ public class RestNameService {
     String thisIp =inetAddress.getHostAddress();
 
     public RestNameService() throws IOException {
-        System.out.println("Ik run nu RestNameService constructor");
+       // System.out.println("Ik run nu RestNameService constructor");
         clearDataBase();
         //readNodeMap();
         //generateReplicationBase();
@@ -41,7 +41,7 @@ public class RestNameService {
         return hash;
     }
     public void addNodeToMap(String name, String ip) throws IOException {
-        System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip "+ip);
+        //System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip "+ip);
         /*
         BufferedWriter writer = new BufferedWriter(
                 new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
@@ -57,15 +57,15 @@ public class RestNameService {
 
          */
 
-        System.out.println(name+" "+ip+" "+"Toegevoegd aan nodemap");
+       // System.out.println(name+" "+ip+" "+"Toegevoegd aan nodemap");
         nodes.put(hashfunction(name,true),ip);
         if (hashfunction(name,true) > highest) {
             highest = hashfunction(name, true);
-            System.out.println(name+" is nu de hoogst gehashte node");
+            //System.out.println(name+" is nu de hoogst gehashte node");
         }
         if (hashfunction(name,true) < lowest) {
             lowest = hashfunction(name, true);
-            System.out.println(name+" is nu de laagst gehashte node");
+           // System.out.println(name+" is nu de laagst gehashte node");
         }
     }
     public int requestFile(String filename){
@@ -91,7 +91,8 @@ public class RestNameService {
                 nameToAdd.add(st);
                 ipToAdd.add(ip);
             }else
-                System.out.println("removed "+st);
+                System.out.println();
+               // System.out.println("removed "+st);
         }
         int i = 0;
         BufferedWriter writer = new BufferedWriter(
@@ -117,9 +118,9 @@ public class RestNameService {
         String st2;
         //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null) {
-            System.out.println("Dees is st2 " + st2);
+            //System.out.println("Dees is st2 " + st2);
             String[] temporary = st2.split("::");
-            System.out.println("Dees is den array tostring" + Arrays.toString(temporary));
+           // System.out.println("Dees is den array tostring" + Arrays.toString(temporary));
             String fileName = temporary[0];
             String nodeName = temporary[1];
             Integer tempfile = hashfunction(fileName, false);
@@ -170,7 +171,7 @@ public class RestNameService {
         if(nodes.get(nameHash)!=null) {
             if (dataBase.get(fileHash) == null) {
                 dataBase.put(fileHash, nameHash);
-                System.out.println("na komt de schrijver van database");
+                //System.out.println("na komt de schrijver van database");
                 BufferedWriter writer = new BufferedWriter(
                         new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true)  //Set true for append mode
                         //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
@@ -203,7 +204,7 @@ public class RestNameService {
             if(!st.isEmpty()) {
                 String ip = br.readLine();
                 int hash = hashfunction(st, true);
-                System.out.println("node " + st + " heeft hashwaarde " + hash);
+               // System.out.println("node " + st + " heeft hashwaarde " + hash);
                 nodes.put(hash, ip);
                 if (hash > highest)
                     highest = hash;
