@@ -23,7 +23,7 @@ public class NameController {
     @GetMapping("/AddNode")
     public String output (@RequestParam(value = "Name", defaultValue = "omo") String name,@RequestParam(value = "Ip", defaultValue = "omo") String ip) throws IOException {
         if (!name.equals("omo") && !ip.equals("omo")) {
-            //System.out.println("Ik run nu /AddNode, Variebelen name "+name+" ip "+ip);
+            //System.out.println("Ik run nux /AddNode, Variebelen name "+name+" ip "+ip);
             nameService.addNodeToMap(name, ip);
             return "node "+name+" with ip address "+ip+" was succesfully added to the node map";
         }
