@@ -137,7 +137,10 @@ public class RestNameService {
                             System.out.println("nieuwe file, temp = 0");
                             replicationDatabase.put(tempfile, highest);
                         }
-                    } else
+                    } else if (replicationDatabase.get(tempfile)<hashfunction(nodeName,true)){
+                        replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
+                    }
+                    else
                         System.out.println("ouwe file niks toegevoegd temp=0");
                 } else {
                     if (replicationDatabase.get(tempfile) == null) {
