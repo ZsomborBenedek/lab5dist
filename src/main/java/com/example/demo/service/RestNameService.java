@@ -144,17 +144,23 @@ public class RestNameService {
                             System.out.println(nodes.get(highest));
                             URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
-                            System.out.println("Transfer klaar bby kaka");
+                            System.out.println("Transfer klaar bby");
                             //HIER DUS NAAR HIGHEST REPLICATEN
-                        }/*
+                        }
                         else{
                             int i = highest-1;
-                            while (nodes.get((i))==nuzll){
+                            while (nodes.get((i))==null){
                                 i--;
                             }
                             replicationDatabase.put(tempfile,i);
+                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
+                            connection.openConnection().getInputStream();
+                            System.out.println(nodes.get(highest));
+                            URL connection2 = new URL("http://" + nodes.get(i) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
+                            connection2.openConnection().getInputStream();
+
                             //Hier naar i knallen
-                        }*/
+                        }
                     } else if (replicationDatabase.get(tempfile)<highest){
                         System.out.println("get tempfile is nie 0 maar temp wel");
                         System.out.println("2");
