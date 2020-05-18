@@ -269,4 +269,20 @@ public class RestNameService {
         }
     }
 
+    public int removeFileFromDatabase(String name, String file) throws IOException, InterruptedException {
+        int nameHash = hashfunction(name,true);
+        int fileHash = hashfunction(file,false);
+        if (dataBase.get(fileHash) == nameHash){
+            //Hier ook delete replicated file
+            //
+            //
+            URL connection = new URL("http://" + nodes.get(replicationDatabase.get(fileHash)) + ":9000/RemoveReplicatedFile?File=" + file);
+            connection.openConnection().getInputStream();
+            System.out.println("file "+file+" van node "+name+" met filehash "+fileHash+" werd verwijderd");
+            dataBase.remove(fileHash);
+            generateReplicationBase();
+            return 1;
+        }
+        return -1;
+    }
 }
