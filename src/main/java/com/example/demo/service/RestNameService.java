@@ -154,11 +154,11 @@ public class RestNameService {
                             replicationDatabase.put(tempfile,i);
                             //Hier naar i knallen
                         }*/
-                    } else if (replicationDatabase.get(tempfile)<hashfunction(nodeName,true)){
+                    } else if (replicationDatabase.get(tempfile)<highest){
                         System.out.println("2");
                         URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
                         connection.openConnection().getInputStream();
-                        URL connection2 = new URL("http://" + nodes.get(hashfunction(nodeName,true)) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
+                        URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
                         connection2.openConnection().getInputStream();
                         System.out.println("Transfer klaar bby");
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
