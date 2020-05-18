@@ -128,6 +128,7 @@ public class RestNameService {
             System.out.println(tempfile);
             Integer temp = tempfile - 1;
             if (nodes.size() > 1) {
+                System.out.println(" nodes get temp = "+ nodes.get(temp)+" hashfunctie nodename is "+hashfunction(nodeName, true));
                 while ((nodes.get(temp) == null || nodes.get(temp).equals(String.valueOf(hashfunction(nodeName, true)))) && temp != 0) {
                     temp--;
                 }
