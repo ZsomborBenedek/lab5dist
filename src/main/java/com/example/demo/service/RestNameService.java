@@ -162,12 +162,12 @@ public class RestNameService {
 
                     if (replicationDatabase.get(tempfile) == null) {
                         if (!temp.equals(hashfunction(nodeName, true))){
-                        replicationDatabase.put(tempfile, temp);
+                            replicationDatabase.put(tempfile, temp);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
                             URL connection2 = new URL("http://" + nodes.get(temp) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
-                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(highest));
+                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(temp));
                         //Knallen naar temp
                     }/*else{
                             int i = temp-1;
@@ -191,7 +191,7 @@ public class RestNameService {
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                         replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
                     } else
-                        System.out.println("omo");
+                        System.out.println("");
                 }
 
             }

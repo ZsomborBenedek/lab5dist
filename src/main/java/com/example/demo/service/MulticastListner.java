@@ -60,6 +60,7 @@ public class MulticastListner implements Runnable {
             socket.receive(packet);
             String msg = new String(packet.getData(),
                     packet.getOffset(), packet.getLength());
+            System.out.println("Ik receive multicast "+msg);
             if(msg.contains("newNode"))
                 getNameAndIp(msg);
             if ("OK".equals(msg)) {
