@@ -128,13 +128,14 @@ public class RestNameService {
             System.out.println(tempfile);
             Integer temp = tempfile - 1;
             if (nodes.size() > 1) {
-                while ((nodes.get(temp) == null || nodes.get(temp).equals(hashfunction(nodeName, true))) && temp != 0) {
+                while ((nodes.get(temp) == null || nodes.get(temp).equals(String.valueOf(hashfunction(nodeName, true)))) && temp != 0) {
                     temp--;
                 }
                 System.out.println("Temp is hier "+temp);
                 //EERST LISTNER DAN RECEIVE
                 if (temp == 0) {
                     if (replicationDatabase.get(tempfile) == null) {
+                        System.out.println("get tempfile is 0 en temp ook");
                         if (!highest.equals(hashfunction(nodeName, true))) {
                             System.out.println("1");
                             replicationDatabase.put(tempfile, highest);
@@ -155,6 +156,7 @@ public class RestNameService {
                             //Hier naar i knallen
                         }*/
                     } else if (replicationDatabase.get(tempfile)<highest){
+                        System.out.println("get tempfile is nie 0 maar temp wel");
                         System.out.println("2");
                         URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
                         connection.openConnection().getInputStream();
@@ -164,9 +166,10 @@ public class RestNameService {
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                     }
                 } else {
+
                     if (replicationDatabase.get(tempfile) == null) {
                         if (!temp.equals(hashfunction(nodeName, true))){
-                            System.out.println("3");
+                            System.out.println("get tempfile is 0 maar temp nie");
                         replicationDatabase.put(tempfile, temp);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
@@ -188,6 +191,7 @@ public class RestNameService {
 
                         }*/
                     } else if (temp > replicationDatabase.get(tempfile)) {
+                        System.out.println("get tempfile is nie 0 en temp ook nie");
                         System.out.println("4");
                         URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
                         connection.openConnection().getInputStream();
