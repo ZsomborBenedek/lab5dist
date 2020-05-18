@@ -22,10 +22,8 @@ public class RestNameService {
     String thisIp =inetAddress.getHostAddress();
 
     public RestNameService() throws IOException {
-       // System.out.println("Ik run nu RestNameService constructor");
+       System.out.println("Naming Server Has been booted successfully");
         clearDataBase();
-        //readNodeMap();
-        //generateReplicationBase();
     }
 
     public int hashfunction(String name, boolean node) {
@@ -60,15 +58,13 @@ public class RestNameService {
 
          */
 
-       // System.out.println(name+" "+ip+" "+"Toegevoegd aan nodemap");
+       System.out.println(name+" "+ip+" "+"added to nodemap");
         nodes.put(hashfunction(name,true),ip);
         if (hashfunction(name,true) > highest) {
             highest = hashfunction(name, true);
-            //System.out.println(name+" is nu de hoogst gehashte node");
         }
         if (hashfunction(name,true) < lowest) {
             lowest = hashfunction(name, true);
-           // System.out.println(name+" is nu de laagst gehashte node");
         }
     }
     public int requestFile(String filename){
@@ -95,7 +91,6 @@ public class RestNameService {
                 ipToAdd.add(ip);
             }else
                 System.out.println();
-               // System.out.println("removed "+st);
         }
         int i = 0;
         BufferedWriter writer = new BufferedWriter(
@@ -119,77 +114,60 @@ public class RestNameService {
         File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
         String st2;
-        //replicatioDataBase.clear();
         while ((st2 = br2.readLine()) != null) {
-            //Thread.sleep(100);
-            System.out.println("Dees is st2 " + st2);
             String[] temporary = st2.split("::");
-           // System.out.println("Dees is den array tostring" + Arrays.toString(temporary));
             String fileName = temporary[0];
             String nodeName = temporary[1];
             Integer tempfile = hashfunction(fileName, false);
-            System.out.println(tempfile);
             Integer temp = tempfile - 1;
             if (nodes.size() > 1) {
 
                 while ((nodes.get(temp) == null || temp == hashfunction(nodeName, true)) && temp != 0) {
                     temp--;
                 }
-                System.out.println(" nodes get temp = "+ temp+" hashfunctie nodename is "+hashfunction(nodeName, true));
-                System.out.println("Temp is hier "+temp);
-                //EERST LISTNER DAN RECEIVE
                 if (temp == 0) {
                     if (replicationDatabase.get(tempfile) == null) {
-                        System.out.println("get tempfile is 0 en temp ook");
-                        System.out.println(highest+" is highest en hashfunction nodename is "+hashfunction(nodeName,true));
                         if (highest != hashfunction(nodeName, true)) {
                             System.out.println("1");
                             replicationDatabase.put(tempfile, highest);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
-                            System.out.println(nodes.get(highest));
                             URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
-                            System.out.println("Transfer klaar bby");
+                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(highest));
                             //HIER DUS NAAR HIGHEST REPLICATEN
                         }
                         else{
                             int i = highest-1;
-                            System.out.println("kzit al in min 1");
                             while (nodes.get((i))==null){
                                 i--;
                             }
-                            System.out.println("Gast hier moetk wel in gerake he OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                             replicationDatabase.put(tempfile,i);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
-                            System.out.println(nodes.get(highest));
                             URL connection2 = new URL("http://" + nodes.get(i) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
-
+                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(i));
                             //Hier naar i knallen
                         }
                     } else if (replicationDatabase.get(tempfile)<highest){
-                        System.out.println("get tempfile is nie 0 maar temp wel");
-                        System.out.println("2");
                         URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
                         connection.openConnection().getInputStream();
                         URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
                         connection2.openConnection().getInputStream();
-                        System.out.println("Transfer klaar bby");
+                        System.out.println(fileName+" should be replicated from "+nodes.get(replicationDatabase.get(tempfile))+" to "+nodes.get(highest));
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                     }
                 } else {
 
                     if (replicationDatabase.get(tempfile) == null) {
                         if (!temp.equals(hashfunction(nodeName, true))){
-                            System.out.println("get tempfile is 0 maar temp nie");
                         replicationDatabase.put(tempfile, temp);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
                             URL connection2 = new URL("http://" + nodes.get(temp) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
                             connection2.openConnection().getInputStream();
-                            System.out.println("Transfer klaar bby");
+                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(highest));
                         //Knallen naar temp
                     }/*else{
                             int i = temp-1;
@@ -205,33 +183,30 @@ public class RestNameService {
 
                         }*/
                     } else if (temp > replicationDatabase.get(tempfile)) {
-                        System.out.println("get tempfile is nie 0 en temp ook nie");
-                        System.out.println("4");
                         URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
                         connection.openConnection().getInputStream();
                         URL connection2 = new URL("http://" + nodes.get(temp)+ ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
                         connection2.openConnection().getInputStream();
-                        System.out.println("Transfer klaar bby");
+                        System.out.println(fileName+" should be replicated from "+nodes.get(replicationDatabase.get(tempfile))+" to "+nodes.get(temp));
                         replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
                         replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
                     } else
-                        System.out.println("ouwe file niks toegevoegd, temp is nie 0");
+                        System.out.println("omo");
                 }
 
             }
             else
-                System.out.println("nog geen replication want der is maar één node");
+                System.out.println("No replication, Only one node is present");
             System.out.println(replicationDatabase.toString());
         }
     }
     public int addFileToDataBase(String name, String fileName) throws IOException, InterruptedException {
-        System.out.println("Ik run nu addFileToDataBase, Variebelen name "+name+" filename "+fileName);
+        System.out.println("Adding file to database, name "+name+" filename "+fileName);
         int nameHash = hashfunction(name,true);
         int fileHash = hashfunction(fileName,false);
         if(nodes.get(nameHash)!=null) {
             if (dataBase.get(fileHash) == null) {
                 dataBase.put(fileHash, nameHash);
-                //System.out.println("na komt de schrijver van database");
                 BufferedWriter writer = new BufferedWriter(
                         new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true)  //Set true for append mode
                         //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode

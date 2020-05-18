@@ -23,7 +23,7 @@ public class NameController {
     @GetMapping("/AddNode")
     public String output (@RequestParam(value = "Name", defaultValue = "omo") String name,@RequestParam(value = "Ip", defaultValue = "omo") String ip) throws IOException {
         if (!name.equals("omo") && !ip.equals("omo")) {
-            //System.out.println("Ik run nux /AddNode, Variebelen name "+name+" ip "+ip);
+            System.out.println("running /AddNode, name "+name+" ip "+ip);
             nameService.addNodeToMap(name, ip);
             return "node "+name+" with ip address "+ip+" was succesfully added to the node map";
         }
@@ -61,7 +61,7 @@ public class NameController {
     public String addFile (@RequestParam(value = "Name", defaultValue = "omo") String name,@RequestParam(value = "File", defaultValue = "omo") String file) throws IOException, InterruptedException {
         if (!name.equals("omo") && !file.equals("omo")) {
             if (nameService.addFileToDataBase(name,file)==1) {
-                //System.out.println("Ik run nu /AddFile, Variebelen name " + name + " file  " + file);
+                System.out.println("Running /AddFile, name " + name + " file  " + file);
                 return "file " + file + " located at " + name + " was succesfully added to the node map";
             }
             else
