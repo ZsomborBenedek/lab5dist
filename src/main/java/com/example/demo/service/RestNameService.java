@@ -129,10 +129,10 @@ public class RestNameService {
             Integer temp = tempfile - 1;
             if (nodes.size() > 1) {
 
-                while ((nodes.get(temp) == null || nodes.get(temp).equals(String.valueOf(hashfunction(nodeName, true)))) && temp != 0) {
+                while ((nodes.get(temp) == null || temp == hashfunction(nodeName, true)) && temp != 0) {
                     temp--;
                 }
-                System.out.println(" nodes get temp = "+ nodes.get(temp)+" hashfunctie nodename is "+hashfunction(nodeName, true));
+                System.out.println(" nodes get temp = "+ temp+" hashfunctie nodename is "+hashfunction(nodeName, true));
                 System.out.println("Temp is hier "+temp);
                 //EERST LISTNER DAN RECEIVE
                 if (temp == 0) {
