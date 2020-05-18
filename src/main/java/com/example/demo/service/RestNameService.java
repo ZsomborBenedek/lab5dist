@@ -152,6 +152,7 @@ public class RestNameService {
                             while (nodes.get((i))==null){
                                 i--;
                             }
+                            System.out.println("Gast hier moetk wel in gerake he OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                             replicationDatabase.put(tempfile,i);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
                             connection.openConnection().getInputStream();
