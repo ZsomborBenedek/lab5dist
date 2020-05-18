@@ -136,6 +136,7 @@ public class RestNameService {
                 if (temp == 0) {
                     if (replicationDatabase.get(tempfile) == null) {
                         System.out.println("get tempfile is 0 en temp ook");
+                        System.out.println(highest+" is highest en hashfunction nodename is "+hashfunction(nodeName,true));
                         if (highest != hashfunction(nodeName, true)) {
                             System.out.println("1");
                             replicationDatabase.put(tempfile, highest);
