@@ -136,7 +136,7 @@ public class RestNameService {
                 if (temp == 0) {
                     if (replicationDatabase.get(tempfile) == null) {
                         System.out.println("get tempfile is 0 en temp ook");
-                        if (!highest.equals(hashfunction(nodeName, true))) {
+                        if (highest != hashfunction(nodeName, true)) {
                             System.out.println("1");
                             replicationDatabase.put(tempfile, highest);
                             URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
@@ -149,6 +149,7 @@ public class RestNameService {
                         }
                         else{
                             int i = highest-1;
+                            System.out.println("kzit al in min 1");
                             while (nodes.get((i))==null){
                                 i--;
                             }
