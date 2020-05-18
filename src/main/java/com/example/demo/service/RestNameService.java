@@ -2,9 +2,12 @@ package com.example.demo.service;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class RestNameService {
     //
@@ -280,6 +283,24 @@ public class RestNameService {
             connection.openConnection().getInputStream();
             System.out.println("file "+file+" van node "+name+" met filehash "+fileHash+" werd verwijderd");
             dataBase.remove(fileHash);
+            String fileName = "/home/pi/lab5dist/src/main/java/com/example/DataBase.txt";
+            String lineToRemove = file+"::"+name;
+            ArrayList<String> temp = new ArrayList<>();
+            try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+                stream.filter(line -> !line.trim().equals(lineToRemove)).forEach(temp::add);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(temp.toString());
+            BufferedWriter writer = new BufferedWriter(
+                    new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", false)  //Set true for append mode
+                    //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
+            );
+            for (String s : temp) {
+                writer.write(s);
+                writer.newLine();   //Add new line
+            }
+            writer.close();
             generateReplicationBase();
             return 1;
         }
