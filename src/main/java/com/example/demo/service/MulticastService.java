@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 public class MulticastService implements Runnable {
@@ -38,7 +39,9 @@ public class MulticastService implements Runnable {
 
             RestTemplate restTemplate = new RestTemplate();
             String url = "http://" + temp.get(1) + ":9000/SetNameServer";
-            restTemplate.postForEntity(url, new HttpEntity<String>(nameService.thisIp), String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(url,
+                    new HttpEntity<String>(nameService.thisIp), String.class);
+            System.out.println(response.toString());
 
             sendUDPMessage("nodeCount " + nameService.nodes.size(), "230.0.0.0", 10000);
         }

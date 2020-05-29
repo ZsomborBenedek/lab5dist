@@ -13,6 +13,7 @@ import com.example.demo.model.NodeModel;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -141,11 +142,15 @@ public class RestNameService {
 
                             String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
                             FileModel hostFile = new FileModel(fileName);
-                            restTemplate.postForEntity(hostLocUrl, new HttpEntity<FileModel>(hostFile), NodeModel.class);
+                            ResponseEntity<NodeModel> responseHost = restTemplate.postForEntity(hostLocUrl,
+                                    new HttpEntity<FileModel>(hostFile), NodeModel.class);
+                            System.out.println(responseHost.toString());
 
                             String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName
                                     + "/" + nodes.get(dataBase.get(tempfile));
-                            restTemplate.getForEntity(getRepUrl, FileModel.class);
+                            ResponseEntity<FileModel> responseGet = restTemplate.getForEntity(getRepUrl,
+                                    FileModel.class);
+                            System.out.println(responseGet.toString());
 
                             System.out.println(fileName + " should be replicated from "
                                     + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(highest));
@@ -159,11 +164,15 @@ public class RestNameService {
 
                             String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
                             FileModel hostFile = new FileModel(fileName);
-                            restTemplate.postForEntity(hostLocUrl,  new HttpEntity<FileModel>(hostFile), NodeModel.class);
+                            ResponseEntity<NodeModel> responseHost = restTemplate.postForEntity(hostLocUrl,
+                                    new HttpEntity<FileModel>(hostFile), NodeModel.class);
+                            System.out.println(responseHost.toString());
 
                             String getRepUrl = "http://" + nodes.get(i) + ":9000/GetReplicationFile/" + fileName + "/"
                                     + nodes.get(dataBase.get(tempfile));
-                            restTemplate.getForEntity(getRepUrl, NodeModel.class);
+                            ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl,
+                                    NodeModel.class);
+                            System.out.println(responseGet.toString());
 
                             System.out.println(fileName + " should be replicated from "
                                     + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(i));
@@ -174,11 +183,14 @@ public class RestNameService {
                         String transferUrl = "http://" + nodes.get(replicationDatabase.get(tempfile))
                                 + ":9000/TransferReplicatedFile";
                         FileModel file = new FileModel(fileName);
-                        restTemplate.postForEntity(transferUrl,  new HttpEntity<FileModel>(file), NodeModel.class);
+                        ResponseEntity<NodeModel> responseTransfer = restTemplate.postForEntity(transferUrl,
+                                new HttpEntity<FileModel>(file), NodeModel.class);
+                        System.out.println(responseTransfer.toString());
 
                         String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName + "/"
                                 + nodes.get(replicationDatabase.get(tempfile));
-                        restTemplate.getForEntity(getRepUrl, NodeModel.class);
+                        ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl, NodeModel.class);
+                        System.out.println(responseGet.toString());
 
                         System.out.println(fileName + " should be replicated from "
                                 + nodes.get(replicationDatabase.get(tempfile)) + " to " + nodes.get(highest));
@@ -192,11 +204,15 @@ public class RestNameService {
 
                             String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
                             FileModel file = new FileModel(fileName);
-                            restTemplate.postForEntity(hostLocUrl,  new HttpEntity<FileModel>(file), NodeModel.class);
+                            ResponseEntity<NodeModel> responseHost = restTemplate.postForEntity(hostLocUrl,
+                                    new HttpEntity<FileModel>(file), NodeModel.class);
+                            System.out.println(responseHost.toString());
 
                             String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName
                                     + "/" + nodes.get(dataBase.get(tempfile));
-                            restTemplate.getForEntity(getRepUrl, NodeModel.class);
+                            ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl,
+                                    NodeModel.class);
+                            System.out.println(responseGet.toString());
 
                             System.out.println(fileName + " should be replicated from "
                                     + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(temp));
@@ -213,11 +229,14 @@ public class RestNameService {
                         String transferUrl = "http://" + nodes.get(replicationDatabase.get(tempfile))
                                 + ":9000/TransferReplicatedFile";
                         FileModel file = new FileModel(fileName);
-                        restTemplate.postForEntity(transferUrl,  new HttpEntity<FileModel>(file), NodeModel.class);
+                        ResponseEntity<NodeModel> responseTransfer = restTemplate.postForEntity(transferUrl,
+                                new HttpEntity<FileModel>(file), NodeModel.class);
+                        System.out.println(responseTransfer.toString());
 
                         String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName + "/"
                                 + nodes.get(replicationDatabase.get(tempfile));
-                        restTemplate.getForEntity(getRepUrl, NodeModel.class);
+                        ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl, NodeModel.class);
+                        System.out.println(responseGet.toString());
 
                         System.out.println(fileName + " should be replicated from "
                                 + nodes.get(replicationDatabase.get(tempfile)) + " to " + nodes.get(temp));
@@ -241,8 +260,10 @@ public class RestNameService {
             if (dataBase.get(fileHash) == null) {
                 dataBase.put(fileHash, nameHash);
                 BufferedWriter writer = new BufferedWriter(
-                        new FileWriter(new File("src/main/java/com/example/DataBase.txt").getAbsoluteFile(), true) // Set true for
-                                                                                       // append mode
+                        new FileWriter(new File("src/main/java/com/example/DataBase.txt").getAbsoluteFile(), true) // Set
+                                                                                                                   // true
+                                                                                                                   // for
+                // append mode
                 // new
                 // FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
                 // true) //Set true for append mode
@@ -292,7 +313,9 @@ public class RestNameService {
             //
             String removeUrl = "http://" + nodes.get(replicationDatabase.get(fileHash)) + ":9000/RemoveReplicatedFile";
             FileModel fileModel = new FileModel(file);
-            restTemplate.exchange(removeUrl, HttpMethod.DELETE, new HttpEntity<FileModel>(fileModel), NodeModel.class);
+            ResponseEntity<NodeModel> responseRemove = restTemplate.exchange(removeUrl, HttpMethod.DELETE,
+                    new HttpEntity<FileModel>(fileModel), NodeModel.class);
+            System.out.println(responseRemove.toString());
 
             System.out.println("file " + file + " van node " + name + " met filehash " + fileHash + " werd verwijderd");
             dataBase.remove(fileHash);
@@ -305,11 +328,12 @@ public class RestNameService {
                 e.printStackTrace();
             }
             System.out.println(temp.toString());
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("src/main/java/com/example/DataBase.txt").getAbsoluteFile(), false) // Set
-                                                                                                                       // true
-                                                                                                                       // for
-                                                                                                                       // append
-                                                                                                                       // mode
+            BufferedWriter writer = new BufferedWriter(
+                    new FileWriter(new File("src/main/java/com/example/DataBase.txt").getAbsoluteFile(), false) // Set
+            // true
+            // for
+            // append
+            // mode
             // new
             // FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
             // true) //Set true for append mode
