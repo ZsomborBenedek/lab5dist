@@ -1,45 +1,48 @@
 package com.example.demo.service;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
 import java.net.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MulticastListner implements Runnable {
+import org.springframework.web.client.RestTemplate;
+
+public class MulticastService implements Runnable {
 
     RestNameService nameService;
 
-    public MulticastListner(RestNameService temp){
+    public MulticastService(RestNameService temp) {
         nameService = temp;
     }
 
     private ArrayList<String> getNameAndIp(String msg) throws IOException, InterruptedException {
-        //System.out.println("Ik run nu /getNameAndIP");
+        // System.out.println("Ik run nu /getNameAndIP");
         ArrayList<String> temp = new ArrayList<>();
         if (msg.contains("newNode")) {
-            String haha = msg.replace("newNode ","");
+            String haha = msg.replace("newNode ", "");
             if (!haha.isEmpty()) {
                 String[] tokens = haha.split("::");
                 for (String t : tokens)
                     temp.add(t);
             }
 
-            if (nameService.hashfunction(temp.get(0),true) > nameService.highest) {
+            if (nameService.hashfunction(temp.get(0), true) > nameService.highest) {
                 nameService.highest = nameService.hashfunction(temp.get(0), true);
-                System.out.println(temp.get(0)+" is now the highest hashed node");
+                System.out.println(temp.get(0) + " is now the highest hashed node");
             }
-            if (nameService.hashfunction(temp.get(0),true) < nameService.lowest) {
+            if (nameService.hashfunction(temp.get(0), true) < nameService.lowest) {
                 nameService.lowest = nameService.hashfunction(temp.get(0), true);
-                System.out.println(temp.get(0)+" is now the lowest hashed node");
+                System.out.println(temp.get(0) + " is now the lowest hashed node");
             }
             Thread.sleep(500);
-            URL connection2 = new URL("http://"+temp.get(1)+":9000/SetNameServer?ip="+nameService.thisIp);
-            connection2.openConnection().getInputStream();
 
-            sendUDPMessage("nodeCount "+nameService.nodes.size(),"230.0.0.0",10000);
+            RestTemplate restTemplate = new RestTemplate();
+            String url = "http://" + temp.get(1) + ":9000/SetNameServer";
+            restTemplate.postForEntity(url, nameService.thisIp, String.class);
+
+            sendUDPMessage("nodeCount " + nameService.nodes.size(), "230.0.0.0", 10000);
         }
         if (msg.contains("remNode")) {
-            String haha = msg.replace("remNode ","");
+            String haha = msg.replace("remNode ", "");
             if (!haha.isEmpty()) {
                 String[] tokens = haha.split("::");
                 for (String t : tokens)
@@ -48,36 +51,33 @@ public class MulticastListner implements Runnable {
         }
         return temp;
     }
-    public void receiveUDPMessage(int port) throws
-            IOException, InterruptedException {
+
+    public void receiveUDPMessage(int port) throws IOException, InterruptedException {
         byte[] buffer = new byte[1024];
         MulticastSocket socket = new MulticastSocket(port);
         InetAddress group = InetAddress.getByName("230.0.0.0");
         socket.joinGroup(group);
         while (true) {
-            DatagramPacket packet = new DatagramPacket(buffer,
-                    buffer.length);
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             socket.receive(packet);
-            String msg = new String(packet.getData(),
-                    packet.getOffset(), packet.getLength());
-            System.out.println("Ik receive multicast "+msg);
-            if(msg.contains("newNode"))
+            String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
+            System.out.println("Ik receive multicast " + msg);
+            if (msg.contains("newNode"))
                 getNameAndIp(msg);
             if ("OK".equals(msg)) {
-             //   System.out.println("No more message. Exiting : " + msg);
+                // System.out.println("No more message. Exiting : " + msg);
                 break;
             }
         }
         socket.leaveGroup(group);
         socket.close();
     }
-    public static void sendUDPMessage(String message,
-                                      String ipAddress, int port) throws IOException {
+
+    public static void sendUDPMessage(String message, String ipAddress, int port) throws IOException {
         DatagramSocket socket = new DatagramSocket();
         InetAddress group = InetAddress.getByName(ipAddress);
         byte[] msg = message.getBytes();
-        DatagramPacket packet = new DatagramPacket(msg, msg.length,
-                group, port);
+        DatagramPacket packet = new DatagramPacket(msg, msg.length, group, port);
         socket.send(packet);
         socket.close();
     }
@@ -85,8 +85,8 @@ public class MulticastListner implements Runnable {
     @Override
     public void run() {
         try {
-            receiveUDPMessage( 10000);
-            //receiveUDPMessage(eigenIP, 4321);
+            receiveUDPMessage(10000);
+            // receiveUDPMessage(eigenIP, 4321);
         } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
         }

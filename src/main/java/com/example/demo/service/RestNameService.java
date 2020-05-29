@@ -5,10 +5,18 @@ import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
+import com.example.demo.model.FileModel;
+import com.example.demo.model.NodeModel;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
 public class RestNameService {
     //
     HashMap<Integer, Integer> replicationDatabase = new HashMap<>();
@@ -19,61 +27,62 @@ public class RestNameService {
     Integer lowest = 10000000;
     InetAddress inetAddress = InetAddress.getLocalHost();
     String name = inetAddress.getHostName();
-    String thisIp =inetAddress.getHostAddress();
+    String thisIp = inetAddress.getHostAddress();
+
+    RestTemplate restTemplate = new RestTemplate();
 
     public RestNameService() throws IOException {
-       System.out.println("Naming Server Has been booted successfully");
+        System.out.println("Naming Server Has been booted successfully");
         clearDataBase();
     }
 
     public int hashfunction(String name, boolean node) {
-        int hash=0;
+        int hash = 0;
         int temp = 0;
         int i;
-        for (i = 0; i<name.length();i++) {
+        for (i = 0; i < name.length(); i++) {
             hash = 3 * hash + name.charAt(i);
-            temp = temp+ name.charAt(i);
+            temp = temp + name.charAt(i);
         }
-        hash = hash+temp;
+        hash = hash + temp;
         if (node) {
-        }
-        else
-            hash = hash/53;
+        } else
+            hash = hash / 53;
         return hash;
     }
-    public void addNodeToMap(String name, String ip) throws IOException {
-        //System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip "+ip);
-        /*
-        BufferedWriter writer = new BufferedWriter(
-                new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", true)  //Set true for append mode
-                //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
-        );
-        writer.newLine();   //Add new line
-        writer.write(name);
-        writer.newLine();
-        writer.write(ip);
-        writer.close();
-        readNodeMap();
-        generateReplicationBase();
 
+    public void addNodeToMap(String name, String ip) throws IOException {
+        // System.out.println("Ik run nu addNodeToMap, Variebelen name "+name+" ip
+        // "+ip);
+        /*
+         * BufferedWriter writer = new BufferedWriter( new FileWriter(
+         * "//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt",
+         * true) //Set true for append mode //new FileWriter(
+         * "C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
+         * true) //Set true for append mode ); writer.newLine(); //Add new line
+         * writer.write(name); writer.newLine(); writer.write(ip); writer.close();
+         * readNodeMap(); generateationBase();
+         * 
          */
 
-       System.out.println(name+" "+ip+" "+"added to nodemap");
-        nodes.put(hashfunction(name,true),ip);
-        if (hashfunction(name,true) > highest) {
+        System.out.println(name + " " + ip + " " + "added to nodemap");
+        nodes.put(hashfunction(name, true), ip);
+        if (hashfunction(name, true) > highest) {
             highest = hashfunction(name, true);
         }
-        if (hashfunction(name,true) < lowest) {
+        if (hashfunction(name, true) < lowest) {
             lowest = hashfunction(name, true);
         }
     }
-    public int requestFile(String filename){
+
+    public int requestFile(String filename) {
         Integer hash = hashfunction(filename, false);
-        if(replicationDatabase.get(hash)!=null)
+        if (replicationDatabase.get(hash) != null)
             return replicationDatabase.get(hash);
         else
             return -1;
     }
+
     public void removeNodeFromMap(Integer node) throws IOException, InterruptedException {
         nodes.clear();
         File file = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt");
@@ -82,22 +91,26 @@ public class RestNameService {
         nodes.clear();
         ArrayList<String> nameToAdd = new ArrayList<>();
         ArrayList<String> ipToAdd = new ArrayList<>();
-        while ((st = br.readLine()) != null){
+        while ((st = br.readLine()) != null) {
             String ip = br.readLine();
-            int hash = hashfunction(st,true);
-            if (hash!= node) {
+            int hash = hashfunction(st, true);
+            if (hash != node) {
                 nodes.put(hash, ip);
                 nameToAdd.add(st);
                 ipToAdd.add(ip);
-            }else
+            } else
                 System.out.println();
         }
         int i = 0;
         BufferedWriter writer = new BufferedWriter(
-                new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", false)  //Set true for append mode
+                new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", false) // Set
+                                                                                                                        // true
+                                                                                                                        // for
+                                                                                                                        // append
+                                                                                                                        // mode
         );
-        while (i<nameToAdd.size()){
-            if (i>=1)
+        while (i < nameToAdd.size()) {
+            if (i >= 1)
                 writer.newLine();
             writer.write(nameToAdd.get(i));
             writer.newLine();
@@ -109,7 +122,8 @@ public class RestNameService {
         readNodeMap();
         generateReplicationBase();
     }
-    //Dees ga read replicationBase moete worre
+
+    // Dees ga read replicationBase moete worre
     public void generateReplicationBase() throws IOException, InterruptedException {
         File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
         BufferedReader br2 = new BufferedReader(new FileReader(file2));
@@ -130,116 +144,144 @@ public class RestNameService {
                         if (highest != hashfunction(nodeName, true)) {
                             System.out.println("1");
                             replicationDatabase.put(tempfile, highest);
-                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
-                            connection.openConnection().getInputStream();
-                            URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
-                            connection2.openConnection().getInputStream();
-                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(highest));
-                            //HIER DUS NAAR HIGHEST REPLICATEN
-                        }
-                        else{
-                            int i = highest-1;
-                            while (nodes.get((i))==null){
+
+                            String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
+                            FileModel hostFile = new FileModel(fileName);
+                            restTemplate.postForEntity(hostLocUrl, hostFile, NodeModel.class);
+
+                            String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName
+                                    + "/" + nodes.get(dataBase.get(tempfile));
+                            restTemplate.getForEntity(getRepUrl, FileModel.class);
+
+                            System.out.println(fileName + " should be replicated from "
+                                    + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(highest));
+                            // HIER DUS NAAR HIGHEST REPLICATEN
+                        } else {
+                            int i = highest - 1;
+                            while (nodes.get((i)) == null) {
                                 i--;
                             }
-                            replicationDatabase.put(tempfile,i);
-                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
-                            connection.openConnection().getInputStream();
-                            URL connection2 = new URL("http://" + nodes.get(i) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
-                            connection2.openConnection().getInputStream();
-                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(i));
-                            //Hier naar i knallen
+                            replicationDatabase.put(tempfile, i);
+
+                            String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
+                            FileModel hostFile = new FileModel(fileName);
+                            restTemplate.postForEntity(hostLocUrl, hostFile, NodeModel.class);
+
+                            String getRepUrl = "http://" + nodes.get(i) + ":9000/GetReplicationFile/" + fileName + "/"
+                                    + nodes.get(dataBase.get(tempfile));
+                            restTemplate.getForEntity(getRepUrl, NodeModel.class);
+
+                            System.out.println(fileName + " should be replicated from "
+                                    + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(i));
+                            // Hier naar i knallen
                         }
-                    } else if (replicationDatabase.get(tempfile)<highest){
-                        URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
-                        connection.openConnection().getInputStream();
-                        URL connection2 = new URL("http://" + nodes.get(highest) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
-                        connection2.openConnection().getInputStream();
-                        System.out.println(fileName+" should be replicated from "+nodes.get(replicationDatabase.get(tempfile))+" to "+nodes.get(highest));
-                        replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
+                    } else if (replicationDatabase.get(tempfile) < highest) {
+
+                        String transferUrl = "http://" + nodes.get(replicationDatabase.get(tempfile))
+                                + ":9000/TransferReplicatedFile";
+                        FileModel file = new FileModel(fileName);
+                        restTemplate.postForEntity(transferUrl, file, NodeModel.class);
+
+                        String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName + "/"
+                                + nodes.get(replicationDatabase.get(tempfile));
+                        restTemplate.getForEntity(getRepUrl, NodeModel.class);
+
+                        System.out.println(fileName + " should be replicated from "
+                                + nodes.get(replicationDatabase.get(tempfile)) + " to " + nodes.get(highest));
+                        replicationDatabase.replace(tempfile, hashfunction(nodeName, true));
                     }
                 } else {
 
                     if (replicationDatabase.get(tempfile) == null) {
-                        if (!temp.equals(hashfunction(nodeName, true))){
+                        if (!temp.equals(hashfunction(nodeName, true))) {
                             replicationDatabase.put(tempfile, temp);
-                            URL connection = new URL("http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile?FileName=" + fileName);
-                            connection.openConnection().getInputStream();
-                            URL connection2 = new URL("http://" + nodes.get(temp) + ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(dataBase.get(tempfile)));
-                            connection2.openConnection().getInputStream();
-                            System.out.println(fileName+" should be replicated from "+nodes.get(dataBase.get(tempfile))+" to "+nodes.get(temp));
-                        //Knallen naar temp
-                    }/*else{
-                            int i = temp-1;
-                            while (nodes.get((i))==null){
-                                i--;
-                            }
-                            if(i !=0)
-                            replicationDatabase.put(tempfile,i);
-                            //Knallen naar i
-                            else
-                                replicationDatabase.put(tempfile,highest);
-                            //Knallen naar highest
 
-                        }*/
+                            String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
+                            FileModel file = new FileModel(fileName);
+                            restTemplate.postForEntity(hostLocUrl, file, NodeModel.class);
+
+                            String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName
+                                    + "/" + nodes.get(dataBase.get(tempfile));
+                            restTemplate.getForEntity(getRepUrl, NodeModel.class);
+
+                            System.out.println(fileName + " should be replicated from "
+                                    + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(temp));
+                            // Knallen naar temp
+                        } /*
+                           * else{ int i = temp-1; while (nodes.get((i))==null){ i--; } if(i !=0)
+                           * replicationDatabase.put(tempfile,i); //Knallen naar i else
+                           * replicationDatabase.put(tempfile,highest); //Knallen naar highest
+                           * 
+                           * }
+                           */
                     } else if (temp > replicationDatabase.get(tempfile)) {
-                        URL connection = new URL("http://" + nodes.get(replicationDatabase.get(tempfile)) + ":9000/TransferReplicatedFile?name=" + fileName);
-                        connection.openConnection().getInputStream();
-                        URL connection2 = new URL("http://" + nodes.get(temp)+ ":9000/GetReplicationFile?name=" + fileName+"&ownerIP="+nodes.get(replicationDatabase.get(tempfile)));
-                        connection2.openConnection().getInputStream();
-                        System.out.println(fileName+" should be replicated from "+nodes.get(replicationDatabase.get(tempfile))+" to "+nodes.get(temp));
-                        replicationDatabase.replace(tempfile,hashfunction(nodeName,true));
+
+                        String transferUrl = "http://" + nodes.get(replicationDatabase.get(tempfile))
+                                + ":9000/TransferReplicatedFile";
+                        FileModel file = new FileModel(fileName);
+                        restTemplate.postForEntity(transferUrl, file, NodeModel.class);
+
+                        String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName + "/"
+                                + nodes.get(replicationDatabase.get(tempfile));
+                        restTemplate.getForEntity(getRepUrl, NodeModel.class);
+
+                        System.out.println(fileName + " should be replicated from "
+                                + nodes.get(replicationDatabase.get(tempfile)) + " to " + nodes.get(temp));
+                        replicationDatabase.replace(tempfile, hashfunction(nodeName, true));
                         replicationDatabase.replace(tempfile, replicationDatabase.get(tempfile), temp);
                     } else
                         System.out.println("");
                 }
 
-            }
-            else
+            } else
                 System.out.println("No replication, Only one node is present");
             System.out.println(replicationDatabase.toString());
         }
     }
+
     public int addFileToDataBase(String name, String fileName) throws IOException, InterruptedException {
-        System.out.println("Adding file to database, name "+name+" filename "+fileName);
-        int nameHash = hashfunction(name,true);
-        int fileHash = hashfunction(fileName,false);
-        if(nodes.get(nameHash)!=null) {
+        System.out.println("Adding file to database, name " + name + " filename " + fileName);
+        int nameHash = hashfunction(name, true);
+        int fileHash = hashfunction(fileName, false);
+        if (nodes.get(nameHash) != null) {
             if (dataBase.get(fileHash) == null) {
                 dataBase.put(fileHash, nameHash);
                 BufferedWriter writer = new BufferedWriter(
-                        new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true)  //Set true for append mode
-                        //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
+                        new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true) // Set true for
+                                                                                                         // append mode
+                // new
+                // FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
+                // true) //Set true for append mode
                 );
                 writer.write(fileName + "::" + name);
-                writer.newLine();   //Add new line
+                writer.newLine(); // Add new line
                 writer.close();
                 generateReplicationBase();
                 return 1;
             }
             return -1;
-        }
-        else
+        } else
             return -1;
     }
+
     private void clearDataBase() throws IOException {
         File database = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
-        if (database.exists() && database.isFile())
-        {
+        if (database.exists() && database.isFile()) {
             database.delete();
         }
         database.createNewFile();
     }
+
     public void readNodeMap() throws IOException {
         File file = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic///NodeMap.txt");
         BufferedReader br = new BufferedReader(new FileReader(file));
         String st;
         nodes.clear();
-        while ((st = br.readLine()) != null){
-            if(!st.isEmpty()) {
+        while ((st = br.readLine()) != null) {
+            if (!st.isEmpty()) {
                 String ip = br.readLine();
                 int hash = hashfunction(st, true);
-               // System.out.println("node " + st + " heeft hashwaarde " + hash);
+                // System.out.println("node " + st + " heeft hashwaarde " + hash);
                 nodes.put(hash, ip);
                 if (hash > highest)
                     highest = hash;
@@ -248,18 +290,20 @@ public class RestNameService {
     }
 
     public int removeFileFromDatabase(String name, String file) throws IOException, InterruptedException {
-        int nameHash = hashfunction(name,true);
-        int fileHash = hashfunction(file,false);
-        if (dataBase.get(fileHash) == nameHash){
-            //Hier ook delete replicated file
+        int nameHash = hashfunction(name, true);
+        int fileHash = hashfunction(file, false);
+        if (dataBase.get(fileHash) == nameHash) {
+            // Hier ook delete replicated file
             //
             //
-            URL connection = new URL("http://" + nodes.get(replicationDatabase.get(fileHash)) + ":9000/RemoveReplicatedFile?File=" + file);
-            connection.openConnection().getInputStream();
-            System.out.println("file "+file+" van node "+name+" met filehash "+fileHash+" werd verwijderd");
+            String removeUrl = "http://" + nodes.get(replicationDatabase.get(fileHash)) + ":9000/RemoveReplicatedFile";
+            FileModel fileModel = new FileModel(file);
+            restTemplate.exchange(removeUrl, HttpMethod.DELETE, new HttpEntity<FileModel>(fileModel), NodeModel.class);
+
+            System.out.println("file " + file + " van node " + name + " met filehash " + fileHash + " werd verwijderd");
             dataBase.remove(fileHash);
             String fileName = "/home/pi/lab5dist/src/main/java/com/example/DataBase.txt";
-            String lineToRemove = file+"::"+name;
+            String lineToRemove = file + "::" + name;
             ArrayList<String> temp = new ArrayList<>();
             try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
                 stream.filter(line -> !line.trim().equals(lineToRemove)).forEach(temp::add);
@@ -268,12 +312,15 @@ public class RestNameService {
             }
             System.out.println(temp.toString());
             BufferedWriter writer = new BufferedWriter(
-                    new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", false)  //Set true for append mode
-                    //new FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt", true)  //Set true for append mode
+                    new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", false) // Set true for
+                                                                                                      // append mode
+            // new
+            // FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
+            // true) //Set true for append mode
             );
             for (String s : temp) {
                 writer.write(s);
-                writer.newLine();   //Add new line
+                writer.newLine(); // Add new line
             }
             writer.close();
             generateReplicationBase();
