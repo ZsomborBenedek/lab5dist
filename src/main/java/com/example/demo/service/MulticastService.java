@@ -41,7 +41,7 @@ public class MulticastService implements Runnable {
             String url = "http://" + temp.get(1) + ":9000/SetNameServer";
             ResponseEntity<String> response = restTemplate.postForEntity(url,
                     new HttpEntity<String>(nameService.thisIp), String.class);
-            System.out.println(response.toString());
+            System.out.println("\n" + response.toString() + "\n");
 
             sendUDPMessage("nodeCount " + nameService.nodes.size(), "230.0.0.0", 10000);
         }

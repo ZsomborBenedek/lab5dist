@@ -144,13 +144,13 @@ public class RestNameService {
                             FileModel hostFile = new FileModel(fileName);
                             ResponseEntity<NodeModel> responseHost = restTemplate.postForEntity(hostLocUrl,
                                     new HttpEntity<FileModel>(hostFile), NodeModel.class);
-                            System.out.println(responseHost.toString());
+                            System.out.println("\n" + responseHost.toString() + "\n");
 
                             String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName
                                     + "/" + nodes.get(dataBase.get(tempfile));
                             ResponseEntity<FileModel> responseGet = restTemplate.getForEntity(getRepUrl,
                                     FileModel.class);
-                            System.out.println(responseGet.toString());
+                            System.out.println("\n" + responseGet.toString() + "\n");
 
                             System.out.println(fileName + " should be replicated from "
                                     + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(highest));
@@ -166,13 +166,13 @@ public class RestNameService {
                             FileModel hostFile = new FileModel(fileName);
                             ResponseEntity<NodeModel> responseHost = restTemplate.postForEntity(hostLocUrl,
                                     new HttpEntity<FileModel>(hostFile), NodeModel.class);
-                            System.out.println(responseHost.toString());
+                            System.out.println("\n" + responseHost.toString() + "\n");
 
                             String getRepUrl = "http://" + nodes.get(i) + ":9000/GetReplicationFile/" + fileName + "/"
                                     + nodes.get(dataBase.get(tempfile));
                             ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl,
                                     NodeModel.class);
-                            System.out.println(responseGet.toString());
+                            System.out.println("\n" + responseGet.toString() + "\n");
 
                             System.out.println(fileName + " should be replicated from "
                                     + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(i));
@@ -185,12 +185,12 @@ public class RestNameService {
                         FileModel file = new FileModel(fileName);
                         ResponseEntity<NodeModel> responseTransfer = restTemplate.postForEntity(transferUrl,
                                 new HttpEntity<FileModel>(file), NodeModel.class);
-                        System.out.println(responseTransfer.toString());
+                        System.out.println("\n" + responseTransfer.toString());
 
                         String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName + "/"
                                 + nodes.get(replicationDatabase.get(tempfile));
                         ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl, NodeModel.class);
-                        System.out.println(responseGet.toString());
+                        System.out.println("\n" + responseGet.toString() + "\n");
 
                         System.out.println(fileName + " should be replicated from "
                                 + nodes.get(replicationDatabase.get(tempfile)) + " to " + nodes.get(highest));
@@ -206,13 +206,13 @@ public class RestNameService {
                             FileModel file = new FileModel(fileName);
                             ResponseEntity<NodeModel> responseHost = restTemplate.postForEntity(hostLocUrl,
                                     new HttpEntity<FileModel>(file), NodeModel.class);
-                            System.out.println(responseHost.toString());
+                            System.out.println("\n" + responseHost.toString() + "\n");
 
                             String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName
                                     + "/" + nodes.get(dataBase.get(tempfile));
                             ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl,
                                     NodeModel.class);
-                            System.out.println(responseGet.toString());
+                            System.out.println("\n" + responseGet.toString() + "\n");
 
                             System.out.println(fileName + " should be replicated from "
                                     + nodes.get(dataBase.get(tempfile)) + " to " + nodes.get(temp));
@@ -231,12 +231,12 @@ public class RestNameService {
                         FileModel file = new FileModel(fileName);
                         ResponseEntity<NodeModel> responseTransfer = restTemplate.postForEntity(transferUrl,
                                 new HttpEntity<FileModel>(file), NodeModel.class);
-                        System.out.println(responseTransfer.toString());
+                        System.out.println("\n" + responseTransfer.toString());
 
                         String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName + "/"
                                 + nodes.get(replicationDatabase.get(tempfile));
                         ResponseEntity<NodeModel> responseGet = restTemplate.getForEntity(getRepUrl, NodeModel.class);
-                        System.out.println(responseGet.toString());
+                        System.out.println("\n" + responseGet.toString() + "\n");
 
                         System.out.println(fileName + " should be replicated from "
                                 + nodes.get(replicationDatabase.get(tempfile)) + " to " + nodes.get(temp));
@@ -315,7 +315,7 @@ public class RestNameService {
             FileModel fileModel = new FileModel(file);
             ResponseEntity<NodeModel> responseRemove = restTemplate.exchange(removeUrl, HttpMethod.DELETE,
                     new HttpEntity<FileModel>(fileModel), NodeModel.class);
-            System.out.println(responseRemove.toString());
+            System.out.println("\n" + responseRemove.toString());
 
             System.out.println("file " + file + " van node " + name + " met filehash " + fileHash + " werd verwijderd");
             dataBase.remove(fileHash);
