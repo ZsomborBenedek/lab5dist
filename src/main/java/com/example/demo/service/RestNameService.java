@@ -141,7 +141,7 @@ public class RestNameService {
 
                             String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
                             FileModel hostFile = new FileModel(fileName);
-                            restTemplate.postForEntity(hostLocUrl, hostFile, NodeModel.class);
+                            restTemplate.postForEntity(hostLocUrl, new HttpEntity<FileModel>(hostFile), NodeModel.class);
 
                             String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName
                                     + "/" + nodes.get(dataBase.get(tempfile));
@@ -159,7 +159,7 @@ public class RestNameService {
 
                             String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
                             FileModel hostFile = new FileModel(fileName);
-                            restTemplate.postForEntity(hostLocUrl, hostFile, NodeModel.class);
+                            restTemplate.postForEntity(hostLocUrl,  new HttpEntity<FileModel>(hostFile), NodeModel.class);
 
                             String getRepUrl = "http://" + nodes.get(i) + ":9000/GetReplicationFile/" + fileName + "/"
                                     + nodes.get(dataBase.get(tempfile));
@@ -174,7 +174,7 @@ public class RestNameService {
                         String transferUrl = "http://" + nodes.get(replicationDatabase.get(tempfile))
                                 + ":9000/TransferReplicatedFile";
                         FileModel file = new FileModel(fileName);
-                        restTemplate.postForEntity(transferUrl, file, NodeModel.class);
+                        restTemplate.postForEntity(transferUrl,  new HttpEntity<FileModel>(file), NodeModel.class);
 
                         String getRepUrl = "http://" + nodes.get(highest) + ":9000/GetReplicationFile/" + fileName + "/"
                                 + nodes.get(replicationDatabase.get(tempfile));
@@ -192,7 +192,7 @@ public class RestNameService {
 
                             String hostLocUrl = "http://" + nodes.get(dataBase.get(tempfile)) + ":9000/HostLocalFile";
                             FileModel file = new FileModel(fileName);
-                            restTemplate.postForEntity(hostLocUrl, file, NodeModel.class);
+                            restTemplate.postForEntity(hostLocUrl,  new HttpEntity<FileModel>(file), NodeModel.class);
 
                             String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName
                                     + "/" + nodes.get(dataBase.get(tempfile));
@@ -213,7 +213,7 @@ public class RestNameService {
                         String transferUrl = "http://" + nodes.get(replicationDatabase.get(tempfile))
                                 + ":9000/TransferReplicatedFile";
                         FileModel file = new FileModel(fileName);
-                        restTemplate.postForEntity(transferUrl, file, NodeModel.class);
+                        restTemplate.postForEntity(transferUrl,  new HttpEntity<FileModel>(file), NodeModel.class);
 
                         String getRepUrl = "http://" + nodes.get(temp) + ":9000/GetReplicationFile/" + fileName + "/"
                                 + nodes.get(replicationDatabase.get(tempfile));
