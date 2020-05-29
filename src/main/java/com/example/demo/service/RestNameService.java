@@ -56,8 +56,8 @@ public class RestNameService {
         // "+ip);
         /*
          * BufferedWriter writer = new BufferedWriter( new FileWriter(
-         * "//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt",
-         * true) //Set true for append mode //new FileWriter(
+         * src/main/java/com/example/demo/backLogic/NodeMap.txt", true) //Set true for
+         * append mode //new FileWriter(
          * "C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
          * true) //Set true for append mode ); writer.newLine(); //Add new line
          * writer.write(name); writer.newLine(); writer.write(ip); writer.close();
@@ -85,8 +85,8 @@ public class RestNameService {
 
     public void removeNodeFromMap(Integer node) throws IOException, InterruptedException {
         nodes.clear();
-        File file = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt");
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        File file = new File("src/main/java/com/example/demo/backLogic/NodeMap.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
         String st;
         nodes.clear();
         ArrayList<String> nameToAdd = new ArrayList<>();
@@ -102,13 +102,7 @@ public class RestNameService {
                 System.out.println();
         }
         int i = 0;
-        BufferedWriter writer = new BufferedWriter(
-                new FileWriter("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic//NodeMap.txt", false) // Set
-                                                                                                                        // true
-                                                                                                                        // for
-                                                                                                                        // append
-                                                                                                                        // mode
-        );
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file.getAbsolutePath(), false));
         while (i < nameToAdd.size()) {
             if (i >= 1)
                 writer.newLine();
@@ -125,8 +119,8 @@ public class RestNameService {
 
     // Dees ga read replicationBase moete worre
     public void generateReplicationBase() throws IOException, InterruptedException {
-        File file2 = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
-        BufferedReader br2 = new BufferedReader(new FileReader(file2));
+        File file2 = new File("src/main/java/com/example/DataBase.txt");
+        BufferedReader br2 = new BufferedReader(new FileReader(file2.getAbsolutePath()));
         String st2;
         while ((st2 = br2.readLine()) != null) {
             String[] temporary = st2.split("::");
@@ -247,8 +241,8 @@ public class RestNameService {
             if (dataBase.get(fileHash) == null) {
                 dataBase.put(fileHash, nameHash);
                 BufferedWriter writer = new BufferedWriter(
-                        new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", true) // Set true for
-                                                                                                         // append mode
+                        new FileWriter(new File("src/main/java/com/example/DataBase.txt").getAbsoluteFile(), true) // Set true for
+                                                                                       // append mode
                 // new
                 // FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
                 // true) //Set true for append mode
@@ -265,7 +259,7 @@ public class RestNameService {
     }
 
     private void clearDataBase() throws IOException {
-        File database = new File("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt");
+        File database = new File("src/main/java/com/example/DataBase.txt");
         if (database.exists() && database.isFile()) {
             database.delete();
         }
@@ -273,8 +267,8 @@ public class RestNameService {
     }
 
     public void readNodeMap() throws IOException {
-        File file = new File("//home//pi//DSLab5//src//main//java//com//example//demo/backLogic///NodeMap.txt");
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        File file = new File("src/main/java/com/example/demo/backLogic/NodeMap.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file.getAbsolutePath()));
         String st;
         nodes.clear();
         while ((st = br.readLine()) != null) {
@@ -302,7 +296,7 @@ public class RestNameService {
 
             System.out.println("file " + file + " van node " + name + " met filehash " + fileHash + " werd verwijderd");
             dataBase.remove(fileHash);
-            String fileName = "/home/pi/lab5dist/src/main/java/com/example/DataBase.txt";
+            String fileName = "src/main/java/com/example/DataBase.txt";
             String lineToRemove = file + "::" + name;
             ArrayList<String> temp = new ArrayList<>();
             try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
@@ -311,9 +305,11 @@ public class RestNameService {
                 e.printStackTrace();
             }
             System.out.println(temp.toString());
-            BufferedWriter writer = new BufferedWriter(
-                    new FileWriter("/home/pi/lab5dist/src/main/java/com/example/DataBase.txt", false) // Set true for
-                                                                                                      // append mode
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("src/main/java/com/example/DataBase.txt").getAbsoluteFile(), false) // Set
+                                                                                                                       // true
+                                                                                                                       // for
+                                                                                                                       // append
+                                                                                                                       // mode
             // new
             // FileWriter("C:\\Users\\Arla\\Desktop\\School\\lab5distStef\\src\\main\\java\\com\\example\\NodeMap.txt",
             // true) //Set true for append mode
